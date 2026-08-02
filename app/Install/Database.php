@@ -18,21 +18,21 @@ class Database
     private function checkDatabaseConnection($data)
     {
         $this->setupDatabaseConnectionConfig($data);
-
-        DB::connection('mysql')->reconnect();
-        DB::connection('mysql')->getPdo();
+        $driver = env('DB_CONNECTION', 'mysql');
+        DB::connection($driver)->getPdo();
     }
 
     private function setupDatabaseConnectionConfig($data)
     {
+        $driver = env('DB_CONNECTION', 'mysql');
         config([
-            'database.default' => 'mysql',
-            'database.connections.mysql.host' => $data->host,
-            'database.connections.mysql.port' => $data->post,
-            'database.connections.mysql.database' => $data->name,
-            'database.connections.mysql.username' => $data->username,
-            'database.connections.mysql.password' => $data->password,
+            "database.connections.{$driver}.host" => $data->host,
+            "database.connections.{$driver}.port" => $data->post,
+            "database.connections.{$driver}.database" => $data->name,
+            "database.connections.{$driver}.username" => $data->username,
+            "database.connections.{$driver}.password" => $data->password,
         ]);
+        DB::connection($driver)->reconnect();
     }
 
     private function setEnvVariables($data)
