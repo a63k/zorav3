@@ -1,16 +1,20 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
-import { viteStaticCopy } from 'vite-plugin-static-copy'
+import { viteStaticCopy } from 'vite-plugin-static-copy';
+import fs from 'fs';
 
-export default defineConfig({
-    plugins: [
-        laravel({
-            input: [
-                'resources/scss/app.scss',
-                'resources/js/app.js',
-            ],
-            refresh: true,
-        }),
+const plugins = [
+    laravel({
+        input: [
+            'resources/scss/app.scss',
+            'resources/js/app.js',
+        ],
+        refresh: true,
+    }),
+];
+
+if (fs.existsSync('vendor/tinymce/tinymce')) {
+    plugins.push(
         viteStaticCopy({
             targets: [
                 {
@@ -19,5 +23,9 @@ export default defineConfig({
                 }
             ]
         })
-    ],
+    );
+}
+
+export default defineConfig({
+    plugins
 });
